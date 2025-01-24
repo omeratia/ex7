@@ -53,11 +53,7 @@ def read_int_safe(prompt):
     """
     Prompt the user for an integer, re-prompting on invalid input.
     """
-    x = int(input())
-    if x<0:
-        print("Invalid choice.")
-        return None
-    return x
+    
 
 def get_poke_dict_by_id(poke_id):
     """
@@ -178,9 +174,9 @@ def new_pokedex():
     if exist_owner is not None:
         print(f"Owner '{name_input}' already exists. No new Pokedex created.\n")
         return
-    print("Choose your starter Pokemon:")
+    print("Choose your starter Pokemon:") 
     print("1) Treecko\n2) Torchic\n3) Mudkip")
-    starter_index = int(input())
+    starter_index = int(input("Your choice: "))
     if starter_index>3:
         print("Invalid. No new Pokedex created.\n")
         return
@@ -189,7 +185,7 @@ def new_pokedex():
     ownerRoot = insert_owner_bst(ownerRoot,new_owner_node)
 
     starter_pokemon = HOENN_DATA[starter_index]
-    print(f"New Pokedex created for {new_owner_node['name']} with starter:{starter_pokemon['Name']}\n")
+    print(f"New Pokedex created for {new_owner_node['name']} with starter {starter_pokemon['Name']}.\n")
     
 ########################
 # 3) BST Traversals
@@ -307,7 +303,7 @@ def evolve_pokemon_by_name(owner_node):
 
     if duplicate:
         print(f"Pokemon evolved from {existing_pokemon['Name']} (ID {existing_pokemon['ID']}) to {evolved_pokemon_data['Name']} (ID {new_id}).")
-        print(f"{evolved_pokemon_data['Name']} was already present; releasing {existing_pokemon['Name']} immediately.")
+        print(f"{evolved_pokemon_data['Name']} was already present; releasing it immediately.")
         owner_node['pokedex'].remove(existing_pokemon)
         return
     
@@ -432,7 +428,7 @@ def display_filter_sub_menu(owner_node):
 # 8) Sub-menu & Main menu
 ########################
 def print_pokemon_list(plist):
-    if plist == None:
+    if not plist:
         print("There are no Pokemons in this Pokedex that match the criteria.")
     else:
         for p in plist:
@@ -484,13 +480,6 @@ def display_pokedex(owner_node):
         if user_input == 7:
             print("Back to Pokedex Menu.")
             display_menu_on = False
-        
-
-
-
-
-
-
     return
 
 def existing_pokedex():
@@ -507,7 +496,13 @@ def existing_pokedex():
         print("3. Release Pokemon")
         print("4. Evolve Pokemon")
         print("5. Back to Main")
-        user_input = int(input("Your choice: "))
+        user_input = input("Your choice: ")
+
+        while not user_input.isdigit():
+            print("Invalid input.")
+            user_input = input("Your choice: ")
+        user_input = int(user_input)
+        
         if user_input<0 or user_input>5:
             print("Invalid choice.")
         if user_input == 1:
@@ -518,14 +513,9 @@ def existing_pokedex():
             release_pokemon_by_name(owner_node)
         elif user_input == 4:
             evolve_pokemon_by_name(owner_node)
-        else:
+        elif user_input == 5:
+            print("Back to Main Menu.")
             menu_on = False
-        
-
-    
-
-
-
 
 def print_main_menu():
     print("=== Main Menu ===")
@@ -558,9 +548,7 @@ def main_menu():
         else:
             print("Goodbye!")
             return
-
-    
-
+        
 def main():
     """
     Entry point: calls main_menu().
